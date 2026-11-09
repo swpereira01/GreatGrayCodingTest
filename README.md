@@ -1,1 +1,1 @@
-"# GreatGrayCodingTest" 
+Great Gray Coding Test
