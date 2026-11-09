@@ -1,0 +1,2 @@
+Using the Playwright MCP server follow the steps described in login-steps.txt and create a page-object model and spec file. 
+Reuse any existing locators and functions

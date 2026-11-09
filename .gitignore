@@ -1,0 +1,8 @@
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
+C:\Users\shanieka\Desktop\GreatGray\Coding Test\.env

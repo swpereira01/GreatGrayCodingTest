@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Grayfeather Outfitters — QA Practice Shop</title>
+<style>
+  :root {
+    --color-bg: #F7F3EC;
+    --color-surface: #FFFFFF;
+    --color-surface-raised: #FBF9F4;
+    --color-text: #23281F;
+    --color-text-muted: #5C6354;
+    --color-primary: #2F4538;
+    --color-primary-strong: #223328;
+    --color-accent: #B5651D;
+    --color-accent-strong: #944F17;
+    --color-border: #DDD6C7;
+    --color-danger: #A3362B;
+    --color-danger-bg: #FBEAE7;
+    --color-success: #3B7A45;
+    --color-focus: #2F4538;
+    --radius: 3px;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --color-bg: #F1EADA;
+      --color-surface: #FFFFFF;
+      --color-surface-raised: #FBF5E8;
+      --color-text: #23281F;
+      --color-text-muted: #5C6354;
+      --color-primary: #2F4538;
+      --color-primary-strong: #1C2A21;
+      --color-accent: #B5651D;
+      --color-accent-strong: #944F17;
+      --color-border: #DDD2BC;
+      --color-danger: #A3362B;
+      --color-danger-bg: #FBEAE7;
+      --color-success: #3B7A45;
+      --color-focus: #2F4538;
+      color-scheme: light;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --color-bg: #F1EADA;
+    --color-surface: #FFFFFF;
+    --color-surface-raised: #FBF5E8;
+    --color-text: #23281F;
+    --color-text-muted: #5C6354;
+    --color-primary: #2F4538;
+    --color-primary-strong: #1C2A21;
+    --color-accent: #B5651D;
+    --color-accent-strong: #944F17;
+    --color-border: #DDD2BC;
+    --color-danger: #A3362B;
+    --color-danger-bg: #FBEAE7;
+    --color-success: #3B7A45;
+    --color-focus: #2F4538;
+    color-scheme: light;
+  }
+
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    min-height: 100%;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    background: var(--color-primary-strong);
+    z-index: 10;
+  }
+
+  h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 0.4em 0;
+  }
+
+  a { color: inherit; }
+
+  button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  input, select {
+    font-family: inherit;
+    font-size: 0.95rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ---------- layout shell ---------- */
+  #app { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; }
+
+  .site-header {
+    background: var(--color-primary-strong);
+    color: #F7F3EC;
+    padding-top: calc(0.9rem + env(safe-area-inset-top, 0px));
+    padding-bottom: 0.9rem;
+  }
+  .site-header-inner {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    text-decoration: none;
+  }
+  .brand-mark { font-size: 1.3rem; }
+  .brand-name {
+    font-family: Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .header-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+  .cart-button {
+    background: transparent;
+    border: 1px solid rgba(247,243,236,0.4);
+    color: #F7F3EC;
+    border-radius: var(--radius);
+    padding: 0.45rem 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: relative;
+  }
+  .cart-button:hover { background: rgba(247,243,236,0.08); }
+  .cart-badge {
+    background: var(--color-accent);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 1.3em;
+    height: 1.3em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.3em;
+  }
+
+  .menu-wrap { position: relative; }
+  .menu-trigger {
+    background: transparent;
+    border: 1px solid rgba(247,243,236,0.4);
+    color: #F7F3EC;
+    border-radius: var(--radius);
+    padding: 0.45rem 0.7rem;
+  }
+  .menu-trigger:hover { background: rgba(247,243,236,0.08); }
+  .menu-panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.4rem);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    min-width: 190px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    overflow: hidden;
+    z-index: 20;
+  }
+  .menu-panel button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0.65rem 0.9rem;
+    color: var(--color-text);
+    font-size: 0.9rem;
+  }
+  .menu-panel button:hover { background: var(--color-surface-raised); }
+  .menu-username {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  .page-title { margin-bottom: 0.2rem; }
+  .page-subtitle { color: var(--color-text-muted); margin-bottom: 1.5rem; }
+
+  /* ---------- login ---------- */
+  .login-wrap {
+    max-width: 420px;
+    margin: 2.5rem auto 0;
+  }
+  .login-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+  }
+  .field { margin-bottom: 1.1rem; }
+  .field label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .field-hint { font-size: 0.78rem; color: var(--color-text-muted); margin-top: 0.3rem; }
+  .field-error { font-size: 0.8rem; color: var(--color-danger); margin-top: 0.3rem; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+  .btn-primary { background: var(--color-primary); color: #F7F3EC; }
+  .btn-primary:hover:not(:disabled) { background: var(--color-primary-strong); }
+  .btn-accent { background: var(--color-accent); color: #fff; }
+  .btn-accent:hover:not(:disabled) { background: var(--color-accent-strong); }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+  .btn-outline:hover:not(:disabled) { background: var(--color-surface-raised); }
+  .btn-block { width: 100%; }
+
+  .alert {
+    border-radius: var(--radius);
+    padding: 0.7rem 0.9rem;
+    font-size: 0.88rem;
+    margin-bottom: 1.1rem;
+  }
+  .alert-error { background: var(--color-danger-bg); color: var(--color-danger); }
+
+  .forgot-link-wrap { margin: 0 0 1.1rem; font-size: 0.85rem; }
+  .test-accounts {
+    margin-top: 1.5rem;
+    border-top: 1px dashed var(--color-border);
+    padding-top: 1rem;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+  }
+  .test-accounts h2 {
+    font-family: inherit;
+    font-size: 0.78rem;
+    text-transform: none;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+  .test-accounts table { border-collapse: collapse; width: 100%; }
+  .test-accounts td { padding: 0.2rem 0.4rem 0.2rem 0; vertical-align: top; }
+  .test-accounts code {
+    background: var(--color-surface-raised);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+  }
+
+  /* ---------- toolbar / filters ---------- */
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .toolbar-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .toolbar-group label { font-size: 0.78rem; font-weight: 600; color: var(--color-text-muted); }
+  .search-group { flex: 1 1 220px; min-width: 200px; }
+  .search-group input {
+    width: 100%;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .category-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .pill {
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.82rem;
+  }
+  .pill[aria-pressed="true"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #F7F3EC;
+  }
+  .sort-select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  /* ---------- product list ---------- */
+  .product-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1.5rem;
+  }
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+  .product-image {
+    aspect-ratio: 4 / 3;
+    background: var(--color-surface-raised);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .product-image svg { width: 72px; height: 72px; }
+  .product-card-body {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    flex: 1;
+  }
+  .product-category {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-primary);
+  }
+  .product-name { font-size: 1.05rem; margin-bottom: 0; }
+  .link-reset {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .link-reset:hover { color: var(--color-accent); }
+  .product-rating { display: flex; align-items: center; gap: 0.35rem; margin: 0.1rem 0 0.3rem; }
+  .rating-value { font-size: 0.78rem; color: var(--color-text-muted); }
+  .product-desc {
+    color: var(--color-text-muted);
+    font-size: 0.88rem;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .product-card-footer {
+    margin-top: auto;
+    padding-top: 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .product-price { font-weight: 700; font-size: 1.05rem; }
+  .product-action-btn { width: 100%; }
+  .empty-state { color: var(--color-text-muted); padding: 2rem 0; text-align: center; }
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .page-numbers { display: flex; gap: 0.3rem; flex-wrap: wrap; justify-content: center; }
+  .page-number {
+    min-width: 2.2rem;
+    height: 2.2rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+  }
+  .page-number:hover:not([aria-current="page"]) { background: var(--color-surface-raised); }
+  .page-number[aria-current="page"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #F7F3EC;
+    font-weight: 700;
+  }
+
+  .loading-row {
+    padding: 2rem 0;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- toast ---------- */
+  #toast-region {
+    position: fixed;
+    top: calc(1rem + env(safe-area-inset-top, 0px));
+    right: 1rem;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .toast {
+    background: var(--color-primary-strong);
+    color: #F7F3EC;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.88rem;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+  }
+
+  /* ---------- product detail ---------- */
+  .back-link {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 0.85rem;
+    padding: 0;
+    margin-bottom: 1.3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .detail-layout { display: flex; gap: 2rem; flex-wrap: wrap; }
+  .detail-icon {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    flex-shrink: 0;
+  }
+  .detail-icon svg { width: 84px; height: 84px; }
+  .detail-info { flex: 1; min-width: 240px; }
+  .detail-price { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.8rem; }
+  .detail-desc { color: var(--color-text-muted); margin-bottom: 1.4rem; max-width: 60ch; }
+  .detail-specs { margin-bottom: 1.6rem; }
+  .detail-specs h2 { font-size: 0.95rem; margin-bottom: 0.6rem; }
+  .detail-specs dl { display: grid; grid-template-columns: max-content 1fr; gap: 0.4rem 1.2rem; max-width: 420px; margin: 0; }
+  .detail-specs dt { color: var(--color-text-muted); font-size: 0.85rem; }
+  .detail-specs dd { margin: 0; font-size: 0.85rem; font-weight: 600; }
+
+  /* ---------- cart ---------- */
+  .cart-items { list-style: none; margin: 0 0 1.5rem; padding: 0; }
+  .cart-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem 7rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .cart-row-info { min-width: 0; }
+  .cart-row-name { font-weight: 600; }
+  .cart-row-price { color: var(--color-text-muted); font-size: 0.85rem; }
+  .cart-row-total { text-align: right; }
+  .cart-row-total-amount { margin-bottom: 0.2rem; }
+  @media (max-width: 480px) {
+    .cart-row { grid-template-columns: 1fr; row-gap: 0.6rem; }
+    .cart-row-total { text-align: left; }
+  }
+  .qty-control { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+  .qty-control button {
+    width: 1.8rem;
+    height: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-radius: var(--radius);
+  }
+  .qty-value { min-width: 1.4rem; text-align: center; font-weight: 600; }
+  .remove-link {
+    background: none;
+    border: none;
+    color: var(--color-danger);
+    font-size: 0.82rem;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.92rem;
+    padding: 0.3rem 0;
+  }
+  .summary-total { font-weight: 700; font-size: 1.05rem; border-top: 1px solid var(--color-border); margin-top: 0.5rem; padding-top: 0.7rem; }
+
+  /* ---------- checkout ---------- */
+  .steps { display: flex; gap: 0.5rem; margin-bottom: 1.6rem; }
+  .step-pill {
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0.4rem;
+    border-radius: var(--radius);
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+  }
+  .step-pill[data-active="true"] {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #F7F3EC;
+  }
+  .step-pill[data-done="true"] {
+    background: var(--color-surface);
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-grid .span-2 { grid-column: 1 / -1; }
+  @media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .review-block {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+    margin-bottom: 1.1rem;
+  }
+  .review-block h3 { font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .review-block p { margin: 0.15rem 0; font-size: 0.9rem; color: var(--color-text-muted); }
+  .promo-apply { margin: 1rem 0; padding-top: 0.9rem; border-top: 1px dashed var(--color-border); }
+  .promo-input-row { display: flex; gap: 0.5rem; }
+  .promo-input-row input {
+    flex: 1;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .promo-applied-msg { font-size: 0.88rem; margin: 0 0 0.3rem; color: var(--color-text); }
+  .summary-discount { color: var(--color-success); }
+
+  .actions-row { display: flex; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+
+  .confirmation-wrap { max-width: 480px; margin: 2rem auto 0; text-align: center; }
+  .confirmation-icon { font-size: 2.4rem; margin-bottom: 0.6rem; }
+  .order-number {
+    display: inline-block;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0.8rem 0 1.4rem;
+  }
+
+  /* ---------- order history ---------- */
+  .order-table-wrap { overflow-x: auto; }
+  .order-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  .order-table th, .order-table td {
+    text-align: left;
+    padding: 0.7rem 1rem 0.7rem 0;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+  }
+  .order-table td:nth-child(3) { white-space: normal; }
+  .sort-header {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    font-weight: 700;
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .sort-header:hover { color: var(--color-accent); }
+  .order-items-summary { font-size: 0.85rem; color: var(--color-text-muted); max-width: 36ch; }
+  .order-items-summary div { margin: 0.15rem 0; }
+  .order-discount-note { font-size: 0.78rem; color: var(--color-success); margin-top: 0.2rem; }
+
+  /* ---------- promo popup ---------- */
+  .promo-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(35, 40, 31, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+    z-index: 40;
+  }
+  .promo-modal {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    max-width: 360px;
+    width: 100%;
+    padding: 1.75rem;
+    position: relative;
+    text-align: center;
+  }
+  .promo-close {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--color-text-muted);
+    padding: 0.3rem;
+  }
+  .promo-close:hover { color: var(--color-text); }
+  .promo-eyebrow { font-size: 0.78rem; color: var(--color-text-muted); margin: 0 0 0.3rem; }
+  .promo-text { color: var(--color-text-muted); font-size: 0.88rem; margin: 0.4rem 0 1.1rem; }
+  .promo-code {
+    display: inline-block;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: var(--color-surface-raised);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* ---------- footer ---------- */
+  .site-footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+    padding: 1.75rem 1.25rem 2rem;
+  }
+  .site-footer-inner { max-width: 920px; margin: 0 auto; text-align: center; }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2rem 2rem;
+    margin-bottom: 1.1rem;
+  }
+  .footer-link-item { min-width: 160px; max-width: 220px; }
+  .footer-link-title {
+    display: inline-block;
+    color: var(--color-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .footer-panel-text {
+    margin: 0.45rem auto 0;
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+    max-width: 32ch;
+  }
+  .footer-copyright {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>
+</head>
+<body>
+<div id="app" role="application" aria-label="Grayfeather Outfitters practice store"></div>
+<div id="toast-region" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PRODUCT_ICONS = {
+    Lighting:
+      '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<path d="M22 72 A38 38 0 0 1 98 72" fill="none" stroke="var(--color-border)" stroke-width="6" stroke-linecap="round"/>' +
+        '<circle cx="60" cy="70" r="22" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<circle cx="60" cy="70" r="9" fill="var(--color-accent)"/>' +
+        '<path d="M60 46 L60 30 M42 56 L30 46 M78 56 L90 46" stroke="var(--color-accent)" stroke-width="4" stroke-linecap="round"/>' +
+      '</svg>',
+    Cooking:
+      '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<rect x="28" y="74" width="64" height="26" rx="4" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<circle cx="60" cy="68" r="26" fill="none" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<path d="M60 50 C54 42 64 38 59 28 C55 36 48 40 54 48 C56 52 58 51 60 50 Z" fill="var(--color-accent)"/>' +
+        '<line x1="32" y1="100" x2="32" y2="108" stroke="var(--color-primary)" stroke-width="5" stroke-linecap="round"/>' +
+        '<line x1="88" y1="100" x2="88" y2="108" stroke="var(--color-primary)" stroke-width="5" stroke-linecap="round"/>' +
+      '</svg>',
+    Shelter:
+      '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<line x1="22" y1="18" x2="22" y2="100" stroke="var(--color-primary)" stroke-width="6" stroke-linecap="round"/>' +
+        '<line x1="98" y1="18" x2="98" y2="100" stroke="var(--color-primary)" stroke-width="6" stroke-linecap="round"/>' +
+        '<path d="M22 48 Q60 86 98 48" fill="none" stroke="var(--color-accent)" stroke-width="6" stroke-linecap="round"/>' +
+        '<path d="M30 52 Q60 82 90 52" fill="none" stroke="var(--color-accent)" stroke-width="3" opacity="0.5"/>' +
+      '</svg>',
+    Cookware:
+      '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<rect x="34" y="46" width="48" height="46" rx="4" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<path d="M82 56 Q102 56 102 71 Q102 86 82 83" fill="none" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<path d="M46 38 Q49 30 45 24 M60 38 Q63 30 59 24" stroke="var(--color-accent)" stroke-width="4" stroke-linecap="round" fill="none"/>' +
+      '</svg>',
+    Packs:
+      '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+        '<rect x="37" y="36" width="46" height="60" rx="16" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="5"/>' +
+        '<rect x="45" y="56" width="30" height="26" rx="6" fill="none" stroke="var(--color-accent)" stroke-width="4"/>' +
+        '<path d="M46 36 Q46 20 60 20 Q74 20 74 36" fill="none" stroke="var(--color-primary)" stroke-width="5"/>' +
+      '</svg>'
+  };
+
+  var PRODUCTS = [
+    { id: "headlamp", name: "Ridgeline Headlamp", category: "Lighting", price: 34.00,
+      description: "300-lumen rechargeable headlamp with a red night-vision mode.",
+      longDescription: "The Ridgeline throws 300 lumens on high and sips battery on its low, red-light setting so you keep your night vision around camp. USB-C rechargeable, with a snug, no-bounce strap for trail running.",
+      specs: { "Weight": "2.8 oz", "Runtime": "Up to 40 hours on low", "Water rating": "IPX6" },
+      availability: "in-stock" },
+    { id: "stove", name: "Alpine Micro Stove", category: "Cooking", price: 58.50,
+      description: "Folding titanium stove that boils a liter of water in under three minutes.",
+      longDescription: "A folding titanium stove that packs down smaller than a deck of cards. Pairs with any standard isobutane canister and brings a liter to boil in under three minutes, even with a light breeze.",
+      specs: { "Weight": "3.1 oz", "Boil time": "2 min 50 sec per liter", "Fuel": "Isobutane canister (sold separately)" },
+      availability: "in-stock" },
+    { id: "hammock", name: "Driftwood Camp Hammock", category: "Shelter", price: 72.00,
+      description: "Ripstop nylon hammock with an integrated bug net and tree-friendly straps.",
+      longDescription: "Ripstop nylon hammock with a no-see-um bug net built right in, so you can hang it over a creek bed at dusk without a second thought. Includes tree-friendly straps rated for easy, damage-free setup.",
+      specs: { "Weight": "1 lb 9 oz", "Capacity": "400 lb", "Material": "70D ripstop nylon" },
+      availability: "out-of-stock" },
+    { id: "mug", name: "Enamel Trail Mug", category: "Cookware", price: 14.00,
+      description: "12 oz enamel mug with a wire handle, safe to set right on the coals.",
+      longDescription: "A classic 12 oz enamel mug with a folding wire handle. Durable enough to set right down in the coals for a second cup, and it won't hold onto campfire smell the way plastic does.",
+      specs: { "Weight": "4.2 oz", "Capacity": "12 oz", "Material": "Enamel-coated steel" },
+      availability: "in-stock" },
+    { id: "pack", name: "Switchback 40L Pack", category: "Packs", price: 149.00,
+      description: "Weatherproof daypack with hip-belt pockets and a rolltop closure.",
+      longDescription: "A 40-liter weatherproof daypack built for weekend trips. The rolltop closure keeps gear dry in a downpour, and the hip-belt pockets mean your snacks and map stay within reach on the move.",
+      specs: { "Weight": "2 lb 4 oz", "Capacity": "40 liters", "Material": "TPU-coated ripstop" },
+      availability: "in-stock" },
+    { id: "spork", name: "Summit Edition Titanium Spork", category: "Cookware", price: 22.00,
+      description: "Limited-run numbered titanium spork. Stock is checked per order.",
+      longDescription: "Each Summit Edition spork is numbered and milled from a single piece of titanium. Because it's a limited run, we check remaining stock before confirming it can be added to your order.",
+      specs: { "Weight": "0.6 oz", "Material": "Titanium", "Edition": "Numbered, limited run" },
+      availability: "needs-check" },
+    { id: "lantern", name: "Basecamp Lantern", category: "Lighting", price: 42.00,
+      description: "Collapsible USB-rechargeable LED lantern that lights up a whole campsite.",
+      longDescription: "This collapsible lantern folds flat for packing and pops up into a soft, even light that fills a tent or picnic table. USB-C rechargeable with three brightness settings.",
+      specs: { "Weight": "6.5 oz", "Runtime": "20 hours on medium", "Brightness": "250 lumens" },
+      availability: "in-stock" },
+    { id: "candle-lantern", name: "Glacier Candle Lantern", category: "Lighting", price: 19.00,
+      description: "A simple glass-and-brass candle lantern for warm, battery-free light.",
+      longDescription: "No batteries, no charging — just a small candle behind glass for a warm, flickering glow at the picnic table after dark. Folds flat with the candle stored inside.",
+      specs: { "Weight": "5.0 oz", "Material": "Brass and glass", "Burn time": "4 hours per candle" },
+      availability: "out-of-stock" },
+    { id: "string-lights", name: "Switchback String Lights", category: "Lighting", price: 24.00,
+      description: "Lightweight solar-powered string lights for a tent pole or branch.",
+      longDescription: "Ten feet of warm LED string lights that charge off a built-in solar panel by day and wrap easily around a tent pole, branch, or picnic awning by night.",
+      specs: { "Weight": "3.2 oz", "Length": "10 ft", "Power": "Solar with USB backup" },
+      availability: "in-stock" },
+    { id: "flashlight", name: "Talus Pocket Flashlight", category: "Lighting", price: 16.50,
+      description: "A compact aluminum flashlight that clips to a belt loop or pack strap.",
+      longDescription: "Small enough to clip to a belt loop or pack strap and forget about until you need it. Machined aluminum body with a tail-cap switch you can operate with gloves on.",
+      specs: { "Weight": "2.1 oz", "Runtime": "12 hours on high", "Water rating": "IPX4" },
+      availability: "out-of-stock" },
+    { id: "lantern-mount", name: "Tripod Lantern Hanger", category: "Lighting", price: 12.00,
+      description: "A folding tripod stand that lifts any lantern above eye level at camp.",
+      longDescription: "A lightweight folding tripod that lifts a lantern above the picnic table so light spreads evenly over the whole campsite instead of pooling in one spot.",
+      specs: { "Weight": "4.0 oz", "Max height": "34 in", "Material": "Anodized aluminum" },
+      availability: "in-stock" },
+    { id: "cook-set", name: "Basecamp Cook Set", category: "Cooking", price: 64.00,
+      description: "A nesting two-pot cook set with a strainer lid and folding handles.",
+      longDescription: "Two hard-anodized pots that nest together for packing, with a strainer lid for draining pasta and folding handles that stay cool enough to grab bare-handed.",
+      specs: { "Weight": "14.6 oz", "Capacity": "2L + 1.2L", "Material": "Hard-anodized aluminum" },
+      availability: "in-stock" },
+    { id: "french-press", name: "Trailside French Press", category: "Cooking", price: 28.00,
+      description: "A lightweight backpacking french press that fits most 750 ml bottles.",
+      longDescription: "Screws onto most standard-mouth 750 ml bottles, so you get a real cup of coffee at camp without carrying a dedicated carafe. Stainless mesh filter, no paper required.",
+      specs: { "Weight": "3.8 oz", "Capacity": "750 ml bottle fit", "Material": "Stainless mesh" },
+      availability: "in-stock" },
+    { id: "fuel-canister", name: "IsoBlend Fuel Canister", category: "Cooking", price: 9.00,
+      description: "A standard-thread isobutane-propane canister sized for weekend trips.",
+      longDescription: "A standard screw-top canister that fits most backpacking stoves. Sized for a solid weekend of boiling water and cooking meals without carrying excess fuel weight.",
+      specs: { "Weight": "7.9 oz (fueled)", "Burn time": "About 1 hour at full output", "Thread": "Standard screw-top" },
+      availability: "in-stock" },
+    { id: "windscreen", name: "Flint Ridge Windscreen", category: "Cooking", price: 11.00,
+      description: "A folding aluminum windscreen that shields a small stove from gusts.",
+      longDescription: "Folds flat for storage and wraps around a canister stove in seconds, cutting boil times dramatically on windy ridgelines where an open flame struggles.",
+      specs: { "Weight": "1.6 oz", "Material": "Aluminum", "Folded size": "4 x 5 in" },
+      availability: "in-stock" },
+    { id: "camp-grill", name: "Switchback Camp Grill", category: "Cooking", price: 37.00,
+      description: "A compact folding grill grate that sets directly over a campfire.",
+      longDescription: "A folding stainless grate that sets over a campfire ring for grilling straight over the coals, then folds flat to slide into a pack's side pocket.",
+      specs: { "Weight": "1 lb 2 oz", "Cooking area": "12 x 8 in", "Material": "Stainless steel" },
+      availability: "in-stock" },
+    { id: "tent", name: "Switchback 2P Tent", category: "Shelter", price: 189.00,
+      description: "A two-person freestanding tent that pitches in under five minutes.",
+      longDescription: "A freestanding two-person tent with color-coded poles, so it pitches in under five minutes even in the dark. Dual vestibules keep boots and packs dry outside the sleeping area.",
+      specs: { "Weight": "3 lb 4 oz", "Capacity": "2 person", "Packed size": "18 x 6 in" },
+      availability: "in-stock" },
+    { id: "tarp", name: "Basecamp Rain Tarp", category: "Shelter", price: 46.00,
+      description: "A lightweight silnylon tarp for extra coverage over a hammock or vestibule.",
+      longDescription: "A 10 by 10 foot silicone-coated nylon tarp that rigs easily over a hammock or tent vestibule, adding a dry cooking and gear area without much added pack weight.",
+      specs: { "Weight": "11.2 oz", "Coverage": "10 x 10 ft", "Material": "Silicone-coated nylon" },
+      availability: "in-stock" },
+    { id: "bivy", name: "Alpine Bivy Sack", category: "Shelter", price: 95.00,
+      description: "A minimalist waterproof shell for fast-and-light overnights.",
+      longDescription: "A single-wall waterproof-breathable shell built for fast-and-light overnights where every ounce counts and a full tent isn't worth carrying.",
+      specs: { "Weight": "1 lb 1 oz", "Material": "3-layer waterproof-breathable", "Packed size": "8 x 5 in" },
+      availability: "in-stock" },
+    { id: "tent-footprint", name: "Switchback Tent Footprint", category: "Shelter", price: 29.00,
+      description: "A custom-fit ground cloth that protects the Switchback 2P Tent floor.",
+      longDescription: "Cut to match the Switchback 2P Tent's exact floor plan, this ground cloth protects the tent floor from sharp rocks and roots and extends its life considerably.",
+      specs: { "Weight": "7.0 oz", "Material": "Polyethylene", "Fits": "Switchback 2P Tent" },
+      availability: "in-stock" },
+    { id: "guyline-kit", name: "Driftwood Guyline Kit", category: "Shelter", price: 8.50,
+      description: "Reflective guy lines with tensioners for securing a tent or tarp in wind.",
+      longDescription: "Reflective guy lines with easy-adjust tensioners, so a tent or tarp holds steady in wind and is easy to spot on a dark walk back from the privy.",
+      specs: { "Weight": "1.8 oz", "Length": "4 x 8 ft lines", "Material": "Reflective polyester" },
+      availability: "out-of-stock" },
+    { id: "bowl", name: "Basecamp Camp Bowl", category: "Cookware", price: 12.00,
+      description: "A lightweight insulated bowl that keeps trail meals warm longer.",
+      longDescription: "Double-wall construction keeps a hot meal hot a lot longer than a single layer of plastic, and the wide rim makes it easy to eat straight from the pot.",
+      specs: { "Weight": "3.4 oz", "Capacity": "20 oz", "Material": "Double-wall stainless" },
+      availability: "in-stock" },
+    { id: "water-bottle", name: "Driftwood Steel Bottle", category: "Cookware", price: 26.00,
+      description: "A double-wall insulated bottle that keeps water cold through a full day's hike.",
+      longDescription: "Vacuum-insulated stainless steel that keeps water cold for a full day on trail, or coffee hot through a chilly morning summit push.",
+      specs: { "Weight": "10.8 oz", "Capacity": "24 oz", "Material": "18/8 stainless steel" },
+      availability: "in-stock" },
+    { id: "cutting-board", name: "Trailside Folding Cutting Board", category: "Cookware", price: 15.00,
+      description: "A flexible folding cutting board that rolls up small for camp kitchen prep.",
+      longDescription: "A flexible silicone cutting mat that rolls up into a side pocket and unrolls into a full-size prep surface for chopping vegetables at the camp kitchen.",
+      specs: { "Weight": "2.6 oz", "Size": "10 x 7 in unfolded", "Material": "Food-grade silicone" },
+      availability: "in-stock" },
+    { id: "coffee-grinder", name: "Basecamp Hand Grinder", category: "Cookware", price: 34.00,
+      description: "A compact hand-crank burr grinder for fresh coffee at camp.",
+      longDescription: "A compact ceramic burr grinder that turns whole beans into fresh grounds by hand, for campers who won't compromise on their morning cup.",
+      specs: { "Weight": "8.5 oz", "Capacity": "30 g beans", "Material": "Ceramic burr" },
+      availability: "out-of-stock" },
+    { id: "daypack", name: "Ridgeline 20L Daypack", category: "Packs", price: 68.00,
+      description: "A trim daypack built for day hikes, with a hydration sleeve and pole loops.",
+      longDescription: "A trim 20-liter pack sized for day hikes, with an internal hydration sleeve and external loops for trekking poles or an ice axe.",
+      specs: { "Weight": "1 lb 3 oz", "Capacity": "20 liters", "Material": "210D ripstop nylon" },
+      availability: "in-stock" },
+    { id: "duffel", name: "Basecamp Travel Duffel", category: "Packs", price: 89.00,
+      description: "A rugged weatherproof duffel that doubles as carry-on luggage.",
+      longDescription: "A rugged, weatherproof duffel built for basecamp trips that also doubles as carry-on luggage, with reinforced haul handles and a padded shoulder strap.",
+      specs: { "Weight": "2 lb 1 oz", "Capacity": "65 liters", "Material": "TPU-coated tarpaulin" },
+      availability: "in-stock" },
+    { id: "dry-bag", name: "Driftwood Dry Bag", category: "Packs", price: 19.00,
+      description: "A roll-top dry bag that keeps gear sealed on river crossings or rainy days.",
+      longDescription: "A welded-seam roll-top dry bag that keeps a sleeping bag or electronics sealed dry through a river crossing or an all-day rain.",
+      specs: { "Weight": "4.2 oz", "Capacity": "10 liters", "Material": "420D nylon, welded seams" },
+      availability: "in-stock" },
+    { id: "hip-pack", name: "Talus Hip Pack", category: "Packs", price: 32.00,
+      description: "A low-profile hip pack for essentials on fast-and-light missions.",
+      longDescription: "A low-profile hip pack that rides close to the body for fast-and-light missions where a full pack would just get in the way.",
+      specs: { "Weight": "9.6 oz", "Capacity": "3 liters", "Material": "Ripstop nylon" },
+      availability: "in-stock" },
+    { id: "pack-cover", name: "Switchback Pack Cover", category: "Packs", price: 17.00,
+      description: "A stretch-fit rain cover sized for the Switchback 40L Pack.",
+      longDescription: "A stretch-fit silicone-coated cover sized for the Switchback 40L Pack, keeping gear dry in a downpour without needing a pack liner too.",
+      specs: { "Weight": "2.8 oz", "Fits": "35-45L packs", "Material": "Silicone-coated nylon" },
+      availability: "out-of-stock" }
+  ];
+
+  var TEST_USERS = {
+    "trailblazer":    { password: "Summit2026!", mode: "ok" },
+    "basecamp_locked":{ password: "Summit2026!", mode: "locked" },
+    "ridge_slow":     { password: "Summit2026!", mode: "slow" }
+  };
+
+  var STATES = ["CA", "CO", "ME", "MT", "OR", "UT", "VT", "WA"];
+
+  function parseInitialProductHash() {
+    var h = window.location.hash || "";
+    var m = h.match(/^#product-(.+)$/);
+    if (!m) return null;
+    var id = m[1];
+    var exists = PRODUCTS.some(function (p) { return p.id === id; });
+    return exists ? id : null;
+  }
+
+  var pendingProductId = parseInitialProductHash();
+
+  function freshState() {
+    return {
+      view: "login",
+      loginMode: "signin",
+      username: null,
+      loginError: null,
+      loginSubmitting: false,
+      forgotSubmitting: false,
+      productsLoaded: false,
+      productAvailability: { spork: "unchecked" },
+      checkingProductId: null,
+      addingProductId: null,
+      searchTerm: "",
+      sortBy: "name-asc",
+      selectedCategories: [],
+      page: 1,
+      currentProductId: null,
+      cart: {},
+      menuOpen: false,
+      checkoutStep: 1,
+      shipping: { fullName: "", address: "", city: "", state: "", zip: "" },
+      payment: { cardName: "", cardNumber: "", expiry: "", cvv: "" },
+      promoCode: "",
+      promoApplied: false,
+      promoError: null,
+      placingOrder: false,
+      orderNumber: null,
+      orderDate: null,
+      orderHistory: [],
+      orderSortKey: "date",
+      orderSortDir: "desc",
+      promoShown: false,
+      promoVisible: false
+    };
+  }
+
+  var state = freshState();
+  var toastSeq = 0;
+
+  function root() { return document.getElementById("app"); }
+
+  function render() {
+    var el = root();
+    if (state.view === "login") { el.innerHTML = renderLogin(); bindLogin(); return; }
+
+    var html;
+    if (state.view === "shop") html = renderShop();
+    else if (state.view === "product") html = renderProductDetail();
+    else if (state.view === "cart") html = renderCart();
+    else if (state.view === "checkout") html = renderCheckout();
+    else if (state.view === "confirmation") html = renderConfirmation();
+    else if (state.view === "orders") html = renderOrderHistory();
+
+    el.innerHTML = html + renderFooter();
+
+    if (state.view === "shop") { bindShop(); maybeLoadProducts(); }
+    else if (state.view === "product") bindProductDetail();
+    else if (state.view === "cart") bindCart();
+    else if (state.view === "checkout") bindCheckout();
+    else if (state.view === "confirmation") bindConfirmation();
+    else if (state.view === "orders") bindOrderHistory();
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function formatMoney(n) { return "$" + n.toFixed(2); }
+
+  function findProduct(id) {
+    return PRODUCTS.filter(function (p) { return p.id === id; })[0];
+  }
+
+  function cartCount() {
+    var total = 0;
+    for (var id in state.cart) { total += state.cart[id]; }
+    return total;
+  }
+
+  function cartSubtotal() {
+    var sum = 0;
+    for (var id in state.cart) {
+      var p = findProduct(id);
+      if (p) sum += p.price * state.cart[id];
+    }
+    return sum;
+  }
+
+  var SHIPPING_FEE = 6.00;
+  var PROMO_CODE = "TRAILHEAD10";
+  var PROMO_DISCOUNT_RATE = 0.10;
+
+  function orderTotals() {
+    var subtotal = cartSubtotal();
+    var discount = state.promoApplied ? subtotal * PROMO_DISCOUNT_RATE : 0;
+    return {
+      subtotal: subtotal,
+      discount: discount,
+      shipping: SHIPPING_FEE,
+      total: subtotal - discount + SHIPPING_FEE
+    };
+  }
+
+  function showToast(message) {
+    var region = document.getElementById("toast-region");
+    var id = "toast-" + (++toastSeq);
+    var node = document.createElement("div");
+    node.className = "toast";
+    node.setAttribute("role", "status");
+    node.id = id;
+    node.textContent = message;
+    region.appendChild(node);
+    setTimeout(function () {
+      var n = document.getElementById(id);
+      if (n) n.remove();
+    }, 1800);
+  }
+
+  /* ---------------- shared nav + product actions ---------------- */
+
+  function handleGlobalAction(action, btn) {
+    if (action === "go-shop") { state.view = "shop"; state.menuOpen = false; state.page = 1; window.location.hash = ""; render(); return true; }
+    if (action === "go-cart") { state.view = "cart"; state.menuOpen = false; render(); return true; }
+    if (action === "go-orders") { state.view = "orders"; state.menuOpen = false; render(); return true; }
+    if (action === "toggle-menu") { state.menuOpen = !state.menuOpen; render(); return true; }
+    if (action === "logout") { doLogout(); return true; }
+    if (action === "reset-app") { doResetAppState(); return true; }
+    if (action === "dismiss-promo") { state.promoVisible = false; render(); return true; }
+    if (action === "go-forgot") { state.loginMode = "forgot"; state.loginError = null; render(); return true; }
+    if (action === "back-to-login") { state.loginMode = "signin"; state.loginError = null; render(); return true; }
+    if (action === "noop") { return true; }
+    return false;
+  }
+
+  function handleProductAction(action, btn) {
+    if (action === "view-product") {
+      var viewId = btn.getAttribute("data-id");
+      state.currentProductId = viewId;
+      state.view = "product";
+      window.location.hash = "product-" + viewId;
+      render();
+      return true;
+    }
+    if (action === "check-availability") {
+      var checkId = btn.getAttribute("data-id");
+      state.checkingProductId = checkId;
+      render();
+      setTimeout(function () {
+        state.checkingProductId = null;
+        state.productAvailability[checkId] = "in-stock";
+        render();
+      }, 1200);
+      return true;
+    }
+    if (action === "add-to-cart") {
+      var addId = btn.getAttribute("data-id");
+      var product = findProduct(addId);
+      if (product.availability === "out-of-stock") return true;
+      state.addingProductId = addId;
+      render();
+      setTimeout(function () {
+        state.addingProductId = null;
+        state.cart[addId] = (state.cart[addId] || 0) + 1;
+        render();
+        showToast("Added " + product.name + " to cart");
+      }, 400);
+      return true;
+    }
+    return false;
+  }
+
+  function doLogout() {
+    state = freshState();
+    window.location.hash = "";
+    render();
+  }
+
+  function appClickHandler(e) {
+    var btn = e.target.closest("[data-action]");
+    if (!btn) return;
+    var action = btn.getAttribute("data-action");
+    var id = btn.getAttribute("data-id");
+
+    if (handleGlobalAction(action, btn)) return;
+
+    if (action === "filter-all") {
+      state.selectedCategories = [];
+      state.page = 1;
+      render();
+      return;
+    }
+    if (action === "filter-toggle") {
+      var cat = btn.getAttribute("data-category");
+      var idx = state.selectedCategories.indexOf(cat);
+      if (idx === -1) state.selectedCategories.push(cat);
+      else state.selectedCategories.splice(idx, 1);
+      state.page = 1;
+      render();
+      return;
+    }
+    if (action === "sort-orders") {
+      var sortKey = btn.getAttribute("data-sort-key");
+      if (state.orderSortKey === sortKey) {
+        state.orderSortDir = state.orderSortDir === "asc" ? "desc" : "asc";
+      } else {
+        state.orderSortKey = sortKey;
+        state.orderSortDir = "asc";
+      }
+      render();
+      return;
+    }
+    if (action === "page-prev") { if (state.page > 1) state.page -= 1; render(); return; }
+    if (action === "page-next") { state.page += 1; render(); return; }
+    if (action === "page-goto") { state.page = parseInt(btn.getAttribute("data-page"), 10) || 1; render(); return; }
+
+    if (action === "go-checkout") {
+      if (Object.keys(state.cart).length === 0) return;
+      state.view = "checkout";
+      state.checkoutStep = 1;
+      render();
+      return;
+    }
+    if (action === "inc") { state.cart[id] += 1; render(); return; }
+    if (action === "dec") {
+      state.cart[id] -= 1;
+      if (state.cart[id] <= 0) delete state.cart[id];
+      render();
+      return;
+    }
+    if (action === "remove") { delete state.cart[id]; render(); return; }
+
+    if (action === "back-shipping") { state.checkoutStep = 1; render(); return; }
+    if (action === "back-payment") { state.checkoutStep = 2; render(); return; }
+    if (action === "remove-promo") {
+      state.promoApplied = false;
+      state.promoCode = "";
+      state.promoError = null;
+      render();
+      return;
+    }
+    if (action === "place-order") {
+      state.placingOrder = true;
+      render();
+      setTimeout(function () {
+        state.placingOrder = false;
+        state.orderNumber = "GF-" + Math.floor(100000 + Math.random() * 900000);
+        var placedAt = new Date();
+        var delivery = new Date();
+        delivery.setDate(delivery.getDate() + 5);
+        state.orderDate = delivery.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+
+        var orderItems = Object.keys(state.cart).map(function (id) {
+          var p = findProduct(id);
+          return { name: p.name, qty: state.cart[id], price: p.price };
+        });
+        var placedTotals = orderTotals();
+        state.orderHistory.push({
+          orderNumber: state.orderNumber,
+          placedAt: placedAt,
+          items: orderItems,
+          total: placedTotals.total,
+          discountApplied: state.promoApplied,
+          discountAmount: placedTotals.discount
+        });
+
+        state.view = "confirmation";
+        render();
+      }, 1600);
+      return;
+    }
+
+    if (action === "continue-shopping") {
+      state.cart = {};
+      state.checkoutStep = 1;
+      state.shipping = { fullName: "", address: "", city: "", state: "", zip: "" };
+      state.payment = { cardName: "", cardNumber: "", expiry: "", cvv: "" };
+      state.orderNumber = null;
+      state.promoCode = "";
+      state.promoApplied = false;
+      state.promoError = null;
+      state.view = "shop";
+      window.location.hash = "";
+      render();
+      return;
+    }
+
+    handleProductAction(action, btn);
+  }
+
+  function doResetAppState() {
+    state.cart = {};
+    state.productAvailability = { spork: "unchecked" };
+    state.checkoutStep = 1;
+    state.shipping = { fullName: "", address: "", city: "", state: "", zip: "" };
+    state.payment = { cardName: "", cardNumber: "", expiry: "", cvv: "" };
+    state.promoCode = "";
+    state.promoApplied = false;
+    state.promoError = null;
+    state.orderHistory = [];
+    state.promoShown = false;
+    state.promoVisible = false;
+    state.menuOpen = false;
+    state.view = "shop";
+    window.location.hash = "";
+    render();
+    showToast("App state has been reset");
+  }
+
+  /* ---------------- header (shared across logged-in views) ---------------- */
+
+  function renderHeader() {
+    var count = cartCount();
+    return "" +
+      '<header class="site-header">' +
+        '<div class="site-header-inner">' +
+          '<a href="#" class="brand" data-action="go-shop">' +
+            '<span class="brand-mark" aria-hidden="true">&#129417;</span>' +
+            '<span class="brand-name">Grayfeather Outfitters</span>' +
+          '</a>' +
+          '<div class="header-actions">' +
+            '<button type="button" class="cart-button" data-action="go-cart" aria-label="View cart, ' + count + ' item' + (count === 1 ? "" : "s") + '">' +
+              '<span aria-hidden="true">&#128722;</span> Cart' +
+              (count > 0 ? '<span class="cart-badge" data-testid="cart-count">' + count + '</span>' : '<span class="cart-badge" data-testid="cart-count" style="visibility:hidden">0</span>') +
+            '</button>' +
+            '<div class="menu-wrap">' +
+              '<button type="button" class="menu-trigger" data-action="toggle-menu" aria-haspopup="true" aria-expanded="' + (state.menuOpen ? "true" : "false") + '">Account &#9662;</button>' +
+              (state.menuOpen ? renderMenuPanel() : "") +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</header>';
+  }
+
+  function renderMenuPanel() {
+    return "" +
+      '<div class="menu-panel" role="menu">' +
+        '<div class="menu-username">Signed in as <strong>' + escapeHtml(state.username || "") + '</strong></div>' +
+        '<button type="button" role="menuitem" data-action="go-orders">Order History</button>' +
+        '<button type="button" role="menuitem" data-action="reset-app">Reset App State</button>' +
+        '<button type="button" role="menuitem" data-action="logout">Log Out</button>' +
+      '</div>';
+  }
+
+  var FOOTER_PANELS = [
+    { id: "shipping", label: "Shipping & Returns", text: "Orders ship within 2 business days from our basecamp warehouse. Returns are accepted within 30 days of delivery for unused gear in its original packaging." },
+    { id: "faq", label: "FAQ", text: "Most orders arrive within 5 to 7 days within the continental US. Exchanges follow the same window and condition requirements as returns." },
+    { id: "privacy", label: "Privacy Policy", text: "This is a practice application built for software testing exercises. No real personal data is collected or stored outside this browser session." }
+  ];
+
+  function renderFooter() {
+    var year = new Date().getFullYear();
+
+    var linksHtml = FOOTER_PANELS.map(function (p) {
+      return "" +
+        '<div class="footer-link-item">' +
+          '<span class="footer-link-title">' + escapeHtml(p.label) + '</span>' +
+          '<p class="footer-panel-text">' + escapeHtml(p.text) + '</p>' +
+        '</div>';
+    }).join("");
+
+    return "" +
+      '<footer class="site-footer">' +
+        '<div class="site-footer-inner">' +
+          '<div class="footer-links">' + linksHtml + '</div>' +
+          '<p class="footer-copyright">&copy; ' + year + ' Grayfeather Outfitters. A practice application for software testing.</p>' +
+        '</div>' +
+      '</footer>';
+  }
+
+  /* ---------------- login ---------------- */
+
+  function renderLogin() {
+    var cardHtml;
+    if (state.loginMode === "forgot") cardHtml = renderForgotPasswordCard();
+    else if (state.loginMode === "forgot-sent") cardHtml = renderForgotPasswordSentCard();
+    else cardHtml = renderSignInCard();
+
+    return "" +
+      '<header class="site-header"><div class="site-header-inner">' +
+        '<a href="#" class="brand" style="pointer-events:none"><span class="brand-mark" aria-hidden="true">&#129417;</span><span class="brand-name">Grayfeather Outfitters</span></a>' +
+      '</div></header>' +
+      '<main>' +
+        '<div class="login-wrap">' +
+          '<div class="login-card">' + cardHtml + '</div>' +
+        '</div>' +
+      '</main>';
+  }
+
+  function renderSignInCard() {
+    var errorHtml = state.loginError
+      ? '<div class="alert alert-error" role="alert">' + escapeHtml(state.loginError) + '</div>'
+      : "";
+    return "" +
+      '<h1>Sign in</h1>' +
+      '<p class="page-subtitle" style="margin-bottom:1.2rem;">Practice store for test automation exercises.</p>' +
+      errorHtml +
+      '<form id="login-form" novalidate>' +
+        '<div class="field">' +
+          '<label for="username">Username</label>' +
+          '<input type="text" id="username" name="username" autocomplete="username">' +
+        '</div>' +
+        '<div class="field">' +
+          '<label for="password">Password</label>' +
+          '<input type="password" id="password" name="password" autocomplete="current-password">' +
+        '</div>' +
+        '<button type="submit" class="btn btn-primary btn-block" id="login-submit" ' + (state.loginSubmitting ? "disabled" : "") + '>' +
+          (state.loginSubmitting ? '<span class="spinner" aria-hidden="true"></span> Signing in&hellip;' : "Sign in") +
+        '</button>' +
+      '</form>' +
+      '<p class="forgot-link-wrap"><button type="button" class="link-reset" data-action="go-forgot">Forgot password?</button></p>' +
+      '<div class="test-accounts">' +
+        '<h2>Test accounts</h2>' +
+        '<table>' +
+          '<tr><td><code>trailblazer</code></td><td>signs in normally</td></tr>' +
+          '<tr><td><code>basecamp_locked</code></td><td>account is locked</td></tr>' +
+          '<tr><td><code>ridge_slow</code></td><td>signs in with a delay</td></tr>' +
+        '</table>' +
+        '<p style="margin-top:0.5rem;">Password for all test accounts: <code>Summit2026!</code></p>' +
+      '</div>';
+  }
+
+  function renderForgotPasswordCard() {
+    return "" +
+      '<h1>Reset your password</h1>' +
+      '<p class="page-subtitle" style="margin-bottom:1.2rem;">Enter the email on your account and we&rsquo;ll send reset instructions.</p>' +
+      '<form id="forgot-form" novalidate>' +
+        '<div class="field">' +
+          '<label for="forgot-email">Email</label>' +
+          '<input type="email" id="forgot-email" name="email" autocomplete="email">' +
+        '</div>' +
+        '<button type="submit" class="btn btn-primary btn-block" id="forgot-submit" ' + (state.forgotSubmitting ? "disabled" : "") + '>' +
+          (state.forgotSubmitting ? '<span class="spinner" aria-hidden="true"></span> Sending&hellip;' : "Send reset link") +
+        '</button>' +
+      '</form>' +
+      '<p class="forgot-link-wrap"><button type="button" class="link-reset" data-action="back-to-login">Back to sign in</button></p>';
+  }
+
+  function renderForgotPasswordSentCard() {
+    return "" +
+      '<h1>Check your email</h1>' +
+      '<p class="page-subtitle" style="margin-bottom:1.2rem;">If an account exists for that email, we&rsquo;ve sent instructions to reset the password.</p>' +
+      '<p class="forgot-link-wrap"><button type="button" class="link-reset" data-action="back-to-login">Back to sign in</button></p>';
+  }
+
+  function bindLogin() {
+    var loginForm = document.getElementById("login-form");
+    if (loginForm) {
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var username = document.getElementById("username").value.trim();
+        var password = document.getElementById("password").value;
+        var user = TEST_USERS[username];
+
+        if (!user || user.password !== password) {
+          state.loginError = "Username and password do not match any account. Check the test accounts listed below.";
+          render();
+          return;
+        }
+        if (user.mode === "locked") {
+          state.loginError = "This account has been suspended. Contact the trail office for help.";
+          render();
+          return;
+        }
+
+        state.loginError = null;
+        state.loginSubmitting = true;
+        render();
+
+        var delay = user.mode === "slow" ? 4000 : 2000;
+        setTimeout(function () {
+          state.username = username;
+          state.loginSubmitting = false;
+          if (pendingProductId) {
+            state.currentProductId = pendingProductId;
+            state.view = "product";
+            pendingProductId = null;
+          } else {
+            state.view = "shop";
+          }
+          render();
+        }, delay);
+      });
+    }
+
+    var forgotForm = document.getElementById("forgot-form");
+    if (forgotForm) {
+      forgotForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        state.forgotSubmitting = true;
+        render();
+        setTimeout(function () {
+          state.forgotSubmitting = false;
+          state.loginMode = "forgot-sent";
+          render();
+        }, 900);
+      });
+    }
+  }
+
+  /* ---------------- shop ---------------- */
+
+  function maybeLoadProducts() {
+    if (state.productsLoaded) return;
+    setTimeout(function () {
+      state.productsLoaded = true;
+      render();
+      if (!state.promoShown) {
+        setTimeout(function () {
+          state.promoShown = true;
+          state.promoVisible = true;
+          render();
+        }, 900);
+      }
+    }, 650);
+  }
+
+  function renderPromoPopup() {
+    if (!state.promoVisible) return "";
+    return "" +
+      '<div class="promo-overlay" data-action="dismiss-promo">' +
+        '<div class="promo-modal" role="dialog" aria-modal="true" aria-labelledby="promo-title" data-action="noop">' +
+          '<button type="button" class="promo-close" data-action="dismiss-promo" aria-label="Close">&times;</button>' +
+          '<p class="promo-eyebrow">First order?</p>' +
+          '<h2 id="promo-title">Take 10% off</h2>' +
+          '<p class="promo-text">Use the code below at checkout on your first order with us.</p>' +
+          '<div class="promo-code">TRAILHEAD10</div>' +
+          '<button type="button" class="btn btn-primary btn-block" data-action="dismiss-promo">Start shopping</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  var PAGE_SIZE = 9;
+
+  function filteredProducts() {
+    var list = PRODUCTS.slice();
+    if (state.selectedCategories.length > 0) {
+      list = list.filter(function (p) { return state.selectedCategories.indexOf(p.category) !== -1; });
+    }
+    var term = state.searchTerm.trim().toLowerCase();
+    if (term) {
+      list = list.filter(function (p) {
+        return p.name.toLowerCase().indexOf(term) !== -1 || p.description.toLowerCase().indexOf(term) !== -1;
+      });
+    }
+    list.sort(function (a, b) {
+      if (state.sortBy === "name-asc") return a.name.localeCompare(b.name);
+      if (state.sortBy === "name-desc") return b.name.localeCompare(a.name);
+      if (state.sortBy === "price-asc") return a.price - b.price;
+      if (state.sortBy === "price-desc") return b.price - a.price;
+      return 0;
+    });
+    return list;
+  }
+
+  function renderShop() {
+    var categories = PRODUCTS.map(function (p) { return p.category; }).filter(function (c, i, arr) { return arr.indexOf(c) === i; });
+
+    var body;
+    if (!state.productsLoaded) {
+      body = '<div class="loading-row" role="status"><span class="spinner" aria-hidden="true"></span> Loading gear&hellip;</div>';
+    } else {
+      var filtered = filteredProducts();
+      if (filtered.length === 0) {
+        body = '<p class="empty-state">No gear matches your search.</p>';
+      } else {
+        var totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        if (state.page > totalPages) state.page = totalPages;
+        if (state.page < 1) state.page = 1;
+        var start = (state.page - 1) * PAGE_SIZE;
+        var pageItems = filtered.slice(start, start + PAGE_SIZE);
+        body = '<ul class="product-list" aria-label="Product catalog">' + pageItems.map(renderProductCard).join("") + '</ul>' +
+          renderPagination(state.page, totalPages);
+      }
+    }
+
+    var categoryPillsHtml = '<div class="category-pills" role="group" aria-labelledby="category-label">' +
+      '<button type="button" class="pill" data-action="filter-all" aria-pressed="' + (state.selectedCategories.length === 0 ? "true" : "false") + '">All</button>' +
+      categories.map(function (c) {
+        var isActive = state.selectedCategories.indexOf(c) !== -1;
+        return '<button type="button" class="pill" data-action="filter-toggle" data-category="' + escapeHtml(c) + '" aria-pressed="' + (isActive ? "true" : "false") + '">' + escapeHtml(c) + '</button>';
+      }).join("") +
+      '</div>';
+
+    return "" +
+      renderHeader() +
+      renderPromoPopup() +
+      '<main>' +
+        '<h1 class="page-title">Gear for the trail</h1>' +
+        '<p class="page-subtitle">Everything here ships from our one and only basecamp warehouse.</p>' +
+        '<div class="toolbar">' +
+          '<div class="toolbar-group search-group">' +
+            '<label for="search-input">Search</label>' +
+            '<input type="search" id="search-input" placeholder="Search gear&hellip;" value="' + escapeHtml(state.searchTerm) + '">' +
+          '</div>' +
+          '<div class="toolbar-group">' +
+            '<label id="category-label">Category</label>' +
+            categoryPillsHtml +
+          '</div>' +
+          '<div class="toolbar-group">' +
+            '<label for="sort-select">Sort by</label>' +
+            '<select id="sort-select" class="sort-select">' +
+              '<option value="name-asc"' + (state.sortBy === "name-asc" ? " selected" : "") + '>Name (A&ndash;Z)</option>' +
+              '<option value="name-desc"' + (state.sortBy === "name-desc" ? " selected" : "") + '>Name (Z&ndash;A)</option>' +
+              '<option value="price-asc"' + (state.sortBy === "price-asc" ? " selected" : "") + '>Price (low to high)</option>' +
+              '<option value="price-desc"' + (state.sortBy === "price-desc" ? " selected" : "") + '>Price (high to low)</option>' +
+            '</select>' +
+          '</div>' +
+        '</div>' +
+        body +
+      '</main>';
+  }
+
+  function renderPagination(currentPage, totalPages) {
+    if (totalPages <= 1) return "";
+    var pageButtons = "";
+    for (var n = 1; n <= totalPages; n++) {
+      pageButtons += '<button type="button" class="page-number" data-action="page-goto" data-page="' + n + '" aria-current="' + (n === currentPage ? "page" : "false") + '" aria-label="Page ' + n + '">' + n + '</button>';
+    }
+    return "" +
+      '<nav class="pagination" aria-label="Product pagination">' +
+        '<button type="button" class="btn btn-outline" data-action="page-prev" ' + (currentPage <= 1 ? "disabled" : "") + '>Previous</button>' +
+        '<div class="page-numbers">' + pageButtons + '</div>' +
+        '<button type="button" class="btn btn-outline" data-action="page-next" ' + (currentPage >= totalPages ? "disabled" : "") + '>Next</button>' +
+      '</nav>';
+  }
+
+  // A real custom element with its own shadow root: the star markup inside
+  // is only reachable with a shadow-piercing locator, while the host
+  // element's aria-label still gives an accessible-name based test an
+  // equivalent way in.
+  if (!customElements.get("gf-rating")) {
+    customElements.define("gf-rating", class extends HTMLElement {
+      static get observedAttributes() { return ["value"]; }
+      connectedCallback() {
+        if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+        this._render();
+      }
+      attributeChangedCallback() { if (this.shadowRoot) this._render(); }
+      _render() {
+        var value = parseFloat(this.getAttribute("value") || "0");
+        var full = Math.floor(value);
+        var half = (value - full) >= 0.5;
+        var stars = "";
+        for (var i = 0; i < 5; i++) {
+          var cls = i < full ? "full" : (i === full && half ? "half" : "empty");
+          stars += '<span class="star ' + cls + '">&#9733;</span>';
+        }
+        this.shadowRoot.innerHTML =
+          '<style>' +
+            ':host { display: inline-flex; align-items: center; }' +
+            '.star { font-size: 0.85rem; line-height: 1; color: var(--color-border); }' +
+            '.star.full { color: var(--color-accent); }' +
+            '.star.half { color: var(--color-accent); opacity: 0.5; }' +
+          '</style>' +
+          '<span class="stars">' + stars + '</span>';
+      }
+    });
+  }
+
+  var RATING_STEPS = [3.5, 4, 4.5, 5];
+
+  function productRating(p) {
+    var hash = 0;
+    for (var i = 0; i < p.id.length; i++) { hash = (hash * 31 + p.id.charCodeAt(i)) >>> 0; }
+    return RATING_STEPS[hash % RATING_STEPS.length];
+  }
+
+  function renderRating(p) {
+    var rating = productRating(p);
+    return "" +
+      '<div class="product-rating">' +
+        '<gf-rating value="' + rating + '" role="img" aria-label="' + rating + ' out of 5 stars"></gf-rating>' +
+        '<span class="rating-value">' + rating.toFixed(1) + '</span>' +
+      '</div>';
+  }
+
+  function renderProductCard(p) {
+    var availability = p.availability === "out-of-stock"
+      ? "out-of-stock"
+      : (state.productAvailability[p.id] || (p.availability === "needs-check" ? "unchecked" : "in-stock"));
+    var actionHtml;
+
+    if (availability === "out-of-stock") {
+      actionHtml = '<button type="button" class="btn btn-outline product-action-btn" disabled>Out of Stock</button>';
+    } else if (p.id === state.checkingProductId) {
+      actionHtml = '<button type="button" class="btn btn-outline product-action-btn" disabled><span class="spinner" aria-hidden="true"></span> Checking&hellip;</button>';
+    } else if (availability === "unchecked") {
+      actionHtml = '<button type="button" class="btn btn-outline product-action-btn" data-action="check-availability" data-id="' + p.id + '">Check availability</button>';
+    } else if (p.id === state.addingProductId) {
+      actionHtml = '<button type="button" class="btn btn-accent product-action-btn" disabled>Adding&hellip;</button>';
+    } else {
+      actionHtml = '<button type="button" class="btn btn-accent product-action-btn" data-action="add-to-cart" data-id="' + p.id + '">Add to Cart</button>';
+    }
+
+    return "" +
+      '<li class="product-card">' +
+        '<div class="product-image" role="img" aria-label="' + escapeHtml(p.name) + ' illustration">' + (PRODUCT_ICONS[p.category] || "") + '</div>' +
+        '<div class="product-card-body">' +
+          '<span class="product-category">' + escapeHtml(p.category) + '</span>' +
+          '<h3 class="product-name"><button type="button" class="link-reset" data-action="view-product" data-id="' + p.id + '">' + escapeHtml(p.name) + '</button></h3>' +
+          renderRating(p) +
+          '<p class="product-desc">' + escapeHtml(p.description) + '</p>' +
+          '<div class="product-card-footer">' +
+            '<span class="product-price">' + formatMoney(p.price) + '</span>' +
+            actionHtml +
+          '</div>' +
+        '</div>' +
+      '</li>';
+  }
+
+  function bindShop() {
+    var sortSelect = document.getElementById("sort-select");
+    if (sortSelect) {
+      sortSelect.addEventListener("change", function () {
+        state.sortBy = sortSelect.value;
+        state.page = 1;
+        render();
+      });
+    }
+
+    var searchInput = document.getElementById("search-input");
+    if (searchInput) {
+      searchInput.addEventListener("input", function () {
+        var caret = searchInput.selectionStart;
+        state.searchTerm = searchInput.value;
+        state.page = 1;
+        render();
+        var freshInput = document.getElementById("search-input");
+        if (freshInput) {
+          freshInput.focus();
+          try { freshInput.setSelectionRange(caret, caret); } catch (err) {}
+        }
+      });
+    }
+
+  }
+
+  /* ---------------- product detail ---------------- */
+
+  function renderProductDetail() {
+    var p = findProduct(state.currentProductId);
+    if (!p) {
+      return renderHeader() + '<main><p class="empty-state">That item could not be found.</p><button type="button" class="btn btn-outline" data-action="go-shop">Back to shop</button></main>';
+    }
+
+    var availability = p.availability === "out-of-stock"
+      ? "out-of-stock"
+      : (state.productAvailability[p.id] || (p.availability === "needs-check" ? "unchecked" : "in-stock"));
+    var actionHtml;
+    if (availability === "out-of-stock") {
+      actionHtml = '<button type="button" class="btn btn-outline" disabled>Out of Stock</button>';
+    } else if (p.id === state.checkingProductId) {
+      actionHtml = '<button type="button" class="btn btn-outline" disabled><span class="spinner" aria-hidden="true"></span> Checking&hellip;</button>';
+    } else if (availability === "unchecked") {
+      actionHtml = '<button type="button" class="btn btn-outline" data-action="check-availability" data-id="' + p.id + '">Check availability</button>';
+    } else if (p.id === state.addingProductId) {
+      actionHtml = '<button type="button" class="btn btn-accent" disabled>Adding&hellip;</button>';
+    } else {
+      actionHtml = '<button type="button" class="btn btn-accent" data-action="add-to-cart" data-id="' + p.id + '">Add to Cart</button>';
+    }
+
+    var specsHtml = Object.keys(p.specs).map(function (key) {
+      return '<dt>' + escapeHtml(key) + '</dt><dd>' + escapeHtml(p.specs[key]) + '</dd>';
+    }).join("");
+
+    return "" +
+      renderHeader() +
+      '<main>' +
+        '<button type="button" class="back-link" data-action="go-shop">&larr; Back to shop</button>' +
+        '<div class="detail-layout">' +
+          '<div class="detail-icon" role="img" aria-label="' + escapeHtml(p.name) + ' illustration">' + (PRODUCT_ICONS[p.category] || "") + '</div>' +
+          '<div class="detail-info">' +
+            '<span class="product-category">' + escapeHtml(p.category) + '</span>' +
+            '<h1>' + escapeHtml(p.name) + '</h1>' +
+            renderRating(p) +
+            '<p class="detail-price">' + formatMoney(p.price) + '</p>' +
+            '<p class="detail-desc">' + escapeHtml(p.longDescription) + '</p>' +
+            '<div class="detail-specs">' +
+              '<h2>Specifications</h2>' +
+              '<dl>' + specsHtml + '</dl>' +
+            '</div>' +
+            actionHtml +
+          '</div>' +
+        '</div>' +
+      '</main>';
+  }
+
+  function bindProductDetail() {}
+
+  /* ---------------- cart ---------------- */
+
+  function renderCart() {
+    var ids = Object.keys(state.cart);
+    var bodyHtml;
+    if (ids.length === 0) {
+      bodyHtml = '<p class="empty-state">Your cart is empty.</p>';
+    } else {
+      bodyHtml = '<ul class="cart-items">' +
+        ids.map(function (id) {
+          var p = findProduct(id);
+          var qty = state.cart[id];
+          return "" +
+            '<li class="cart-row">' +
+              '<div class="cart-row-info">' +
+                '<div class="cart-row-name">' + escapeHtml(p.name) + '</div>' +
+                '<div class="cart-row-price">' + formatMoney(p.price) + ' each</div>' +
+              '</div>' +
+              '<div class="qty-control">' +
+                '<button type="button" class="qty-btn" data-action="dec" data-id="' + id + '"><span aria-hidden="true">&minus;</span></button>' +
+                '<span class="qty-value">' + qty + '</span>' +
+                '<button type="button" class="qty-btn" data-action="inc" data-id="' + id + '"><span aria-hidden="true">+</span></button>' +
+              '</div>' +
+              '<div class="cart-row-total">' +
+                '<div class="cart-row-total-amount">' + formatMoney(p.price * qty) + '</div>' +
+                '<button type="button" class="remove-link" data-action="remove" data-id="' + id + '">Remove</button>' +
+              '</div>' +
+            '</li>';
+        }).join("") +
+        '</ul>';
+    }
+
+    var subtotal = cartSubtotal();
+    var hasItems = ids.length > 0;
+
+    return "" +
+      renderHeader() +
+      '<main>' +
+        '<h1 class="page-title">Your cart</h1>' +
+        bodyHtml +
+        (hasItems ? ('<div class="summary-row"><span>Subtotal</span><span>' + formatMoney(subtotal) + '</span></div>') : "") +
+        '<div class="actions-row">' +
+          '<button type="button" class="btn btn-outline" data-action="go-shop">Continue shopping</button>' +
+          '<button type="button" class="btn btn-primary" data-action="go-checkout" ' + (hasItems ? "" : "disabled") + '>Proceed to checkout</button>' +
+        '</div>' +
+      '</main>';
+  }
+
+  function bindCart() {}
+
+  /* ---------------- checkout ---------------- */
+
+  function shippingValid() {
+    var s = state.shipping;
+    return s.fullName.trim().length >= 2 &&
+      s.address.trim().length >= 3 &&
+      s.city.trim().length >= 2 &&
+      s.state.length > 0 &&
+      /^\d{5}$/.test(s.zip.trim());
+  }
+
+  function paymentValid() {
+    var p = state.payment;
+    return p.cardName.trim().length >= 2 &&
+      /^\d{16}$/.test(p.cardNumber.replace(/\s/g, "")) &&
+      /^(0[1-9]|1[0-2])\/\d{2}$/.test(p.expiry.replace(/\s/g, "")) &&
+      /^\d{3}$/.test(p.cvv.trim());
+  }
+
+  function renderCheckout() {
+    var stepsHtml = '<div class="steps" role="list" aria-label="Checkout steps">' +
+      [1, 2, 3].map(function (n) {
+        var label = n === 1 ? "Shipping" : n === 2 ? "Payment" : "Review";
+        return '<div class="step-pill" role="listitem" data-active="' + (state.checkoutStep === n) + '" data-done="' + (state.checkoutStep > n) + '">' + n + '. ' + label + '</div>';
+      }).join("") +
+      '</div>';
+
+    var content;
+    if (state.checkoutStep === 1) content = renderShippingStep();
+    else if (state.checkoutStep === 2) content = renderPaymentStep();
+    else content = renderReviewStep();
+
+    return "" +
+      renderHeader() +
+      '<main>' +
+        '<h1 class="page-title">Checkout</h1>' +
+        stepsHtml +
+        content +
+      '</main>';
+  }
+
+  function renderShippingStep() {
+    var s = state.shipping;
+    return "" +
+      '<form id="shipping-form" novalidate>' +
+        '<div class="form-grid">' +
+          '<div class="field span-2">' +
+            '<label for="fullName">Full name</label>' +
+            '<input type="text" id="fullName" value="' + escapeHtml(s.fullName) + '">' +
+          '</div>' +
+          '<div class="field span-2">' +
+            '<label for="address">Street address</label>' +
+            '<input type="text" id="address" value="' + escapeHtml(s.address) + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="city">City</label>' +
+            '<input type="text" id="city" value="' + escapeHtml(s.city) + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="state">State</label>' +
+            '<select id="state">' +
+              '<option value="">Select&hellip;</option>' +
+              STATES.map(function (abbr) { return '<option value="' + abbr + '"' + (s.state === abbr ? " selected" : "") + '>' + abbr + '</option>'; }).join("") +
+            '</select>' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="zip">ZIP code</label>' +
+            '<input type="text" id="zip" inputmode="numeric" value="' + escapeHtml(s.zip) + '">' +
+            '<div class="field-hint">5 digits</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="actions-row">' +
+          '<button type="button" class="btn btn-outline" data-action="go-cart">Back to cart</button>' +
+          '<button type="submit" class="btn btn-primary" id="continue-payment-btn" ' + (shippingValid() ? "" : "disabled") + '>Continue to payment</button>' +
+        '</div>' +
+      '</form>';
+  }
+
+  function renderPaymentStep() {
+    var p = state.payment;
+    return "" +
+      '<form id="payment-form" novalidate>' +
+        '<div class="form-grid">' +
+          '<div class="field span-2">' +
+            '<label for="cardName">Name on card</label>' +
+            '<input type="text" id="cardName" value="' + escapeHtml(p.cardName) + '">' +
+          '</div>' +
+          '<div class="field span-2">' +
+            '<label for="cardNumber">Card number</label>' +
+            '<input type="text" id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456" value="' + escapeHtml(p.cardNumber) + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="expiry">Expiration (MM/YY)</label>' +
+            '<input type="text" id="expiry" placeholder="08/27" value="' + escapeHtml(p.expiry) + '">' +
+          '</div>' +
+          '<div class="field">' +
+            '<label for="cvv">CVV</label>' +
+            '<input type="text" id="cvv" inputmode="numeric" value="' + escapeHtml(p.cvv) + '">' +
+          '</div>' +
+        '</div>' +
+        '<div class="actions-row">' +
+          '<button type="button" class="btn btn-outline" data-action="back-shipping">Back</button>' +
+          '<button type="submit" class="btn btn-primary" id="continue-review-btn" ' + (paymentValid() ? "" : "disabled") + '>Review order</button>' +
+        '</div>' +
+      '</form>';
+  }
+
+  function renderReviewStep() {
+    var ids = Object.keys(state.cart);
+    var totals = orderTotals();
+    var last4 = state.payment.cardNumber.replace(/\s/g, "").slice(-4);
+
+    var promoHtml = state.promoApplied
+      ? '<p class="promo-applied-msg">Code <strong>' + PROMO_CODE + '</strong> applied &mdash; 10% off.</p>' +
+        '<button type="button" class="link-reset" data-action="remove-promo">Remove code</button>'
+      : '<form id="promo-form" novalidate>' +
+          '<div class="field">' +
+            '<label for="promo-code">Promo code</label>' +
+            '<div class="promo-input-row">' +
+              '<input type="text" id="promo-code" placeholder="Enter code" value="' + escapeHtml(state.promoCode) + '">' +
+              '<button type="submit" class="btn btn-outline">Apply</button>' +
+            '</div>' +
+            (state.promoError ? '<div class="field-error" role="alert">' + escapeHtml(state.promoError) + '</div>' : "") +
+          '</div>' +
+        '</form>';
+
+    return "" +
+      '<div class="review-block">' +
+        '<h3>Shipping to</h3>' +
+        '<p>' + escapeHtml(state.shipping.fullName) + '</p>' +
+        '<p>' + escapeHtml(state.shipping.address) + '</p>' +
+        '<p>' + escapeHtml(state.shipping.city) + ', ' + escapeHtml(state.shipping.state) + ' ' + escapeHtml(state.shipping.zip) + '</p>' +
+      '</div>' +
+      '<div class="review-block">' +
+        '<h3>Payment</h3>' +
+        '<p>Card ending in ' + escapeHtml(last4) + '</p>' +
+      '</div>' +
+      '<div class="review-block">' +
+        '<h3>Order summary</h3>' +
+        ids.map(function (id) {
+          var p = findProduct(id);
+          var qty = state.cart[id];
+          return '<p>' + escapeHtml(p.name) + ' &times; ' + qty + ' &mdash; ' + formatMoney(p.price * qty) + '</p>';
+        }).join("") +
+        '<div class="promo-apply">' + promoHtml + '</div>' +
+        '<div class="summary-row"><span>Subtotal</span><span>' + formatMoney(totals.subtotal) + '</span></div>' +
+        (totals.discount > 0 ? '<div class="summary-row summary-discount"><span>Discount (10%)</span><span>&minus;' + formatMoney(totals.discount) + '</span></div>' : "") +
+        '<div class="summary-row"><span>Shipping</span><span>' + formatMoney(totals.shipping) + '</span></div>' +
+        '<div class="summary-row summary-total"><span>Total</span><span data-testid="order-total">' + formatMoney(totals.total) + '</span></div>' +
+      '</div>' +
+      '<div class="actions-row">' +
+        '<button type="button" class="btn btn-outline" data-action="back-payment">Back</button>' +
+        '<button type="button" class="btn btn-accent" id="place-order-btn" data-action="place-order" ' + (state.placingOrder ? "disabled" : "") + '>' +
+          (state.placingOrder ? '<span class="spinner" aria-hidden="true"></span> Processing payment&hellip;' : "Place order") +
+        '</button>' +
+      '</div>';
+  }
+
+  function bindCheckout() {
+    var shippingForm = document.getElementById("shipping-form");
+    if (shippingForm) {
+      ["fullName", "address", "city", "state", "zip"].forEach(function (field) {
+        var input = document.getElementById(field);
+        input.addEventListener("input", function () {
+          state.shipping[field] = input.value;
+          var btn = document.getElementById("continue-payment-btn");
+          if (btn) btn.disabled = !shippingValid();
+        });
+      });
+      shippingForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!shippingValid()) return;
+        state.checkoutStep = 2;
+        render();
+      });
+    }
+
+    var paymentForm = document.getElementById("payment-form");
+    if (paymentForm) {
+      ["cardName", "cardNumber", "expiry", "cvv"].forEach(function (field) {
+        var input = document.getElementById(field);
+        input.addEventListener("input", function () {
+          state.payment[field] = input.value;
+          var btn = document.getElementById("continue-review-btn");
+          if (btn) btn.disabled = !paymentValid();
+        });
+      });
+      paymentForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (!paymentValid()) return;
+        state.checkoutStep = 3;
+        render();
+      });
+    }
+
+    var promoForm = document.getElementById("promo-form");
+    if (promoForm) {
+      promoForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var entered = document.getElementById("promo-code").value.trim();
+        state.promoCode = entered;
+        if (entered.toUpperCase() === PROMO_CODE) {
+          state.promoApplied = true;
+          state.promoError = null;
+        } else {
+          state.promoApplied = false;
+          state.promoError = "That code isn't valid.";
+        }
+        render();
+      });
+    }
+  }
+
+  /* ---------------- confirmation ---------------- */
+
+  function renderConfirmation() {
+    return "" +
+      renderHeader() +
+      '<main>' +
+        '<div class="confirmation-wrap">' +
+          '<div class="confirmation-icon" aria-hidden="true">&#127961;&#65039;</div>' +
+          '<h1>Order confirmed</h1>' +
+          '<p>Thanks, ' + escapeHtml(state.username || "") + '. Your gear is being packed at basecamp.</p>' +
+          '<div class="order-number" data-testid="order-number">' + escapeHtml(state.orderNumber || "") + '</div>' +
+          '<p>Estimated delivery: ' + escapeHtml(state.orderDate || "") + '</p>' +
+          '<p style="margin-top:1.5rem;">' +
+            '<button type="button" class="btn btn-primary" data-action="continue-shopping">Continue shopping</button>' +
+          '</p>' +
+        '</div>' +
+      '</main>';
+  }
+
+  function bindConfirmation() {}
+
+  /* ---------------- order history ---------------- */
+
+  var ORDER_COLUMNS = [
+    { key: "orderNumber", label: "Order #" },
+    { key: "date", label: "Date" },
+    { key: "itemCount", label: "Items" },
+    { key: "total", label: "Total" }
+  ];
+
+  function sortedOrderHistory() {
+    var list = state.orderHistory.slice();
+    var key = state.orderSortKey;
+    var dir = state.orderSortDir === "asc" ? 1 : -1;
+    list.sort(function (a, b) {
+      var av, bv;
+      if (key === "orderNumber") { av = a.orderNumber; bv = b.orderNumber; }
+      else if (key === "date") { av = a.placedAt.getTime(); bv = b.placedAt.getTime(); }
+      else if (key === "itemCount") { av = a.items.reduce(function (s, i) { return s + i.qty; }, 0); bv = b.items.reduce(function (s, i) { return s + i.qty; }, 0); }
+      else { av = a.total; bv = b.total; }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return 1 * dir;
+      return 0;
+    });
+    return list;
+  }
+
+  function renderOrderHistory() {
+    var orders = sortedOrderHistory();
+    var body;
+
+    if (orders.length === 0) {
+      body = '<p class="empty-state">No orders placed yet this session.</p>';
+    } else {
+      var headHtml = ORDER_COLUMNS.map(function (col) {
+        var isActive = state.orderSortKey === col.key;
+        var ariaSort = isActive ? (state.orderSortDir === "asc" ? "ascending" : "descending") : "none";
+        var arrow = isActive ? (state.orderSortDir === "asc" ? " \u2191" : " \u2193") : "";
+        return '<th aria-sort="' + ariaSort + '"><button type="button" class="sort-header" data-action="sort-orders" data-sort-key="' + col.key + '">' + escapeHtml(col.label) + arrow + '</button></th>';
+      }).join("");
+
+      var rowsHtml = orders.map(function (o) {
+        var dateLabel = o.placedAt.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+        var itemsSummary = o.items.map(function (i) {
+          return '<div>' + escapeHtml(i.name) + ' &times;' + i.qty + ' &mdash; ' + formatMoney(i.price * i.qty) + '</div>';
+        }).join("");
+        var discountNote = o.discountApplied
+          ? '<div class="order-discount-note">' + formatMoney(o.discountAmount) + ' discount applied</div>'
+          : "";
+        return "" +
+          '<tr data-testid="order-row-' + escapeHtml(o.orderNumber) + '">' +
+            '<td data-testid="order-number-' + escapeHtml(o.orderNumber) + '">' + escapeHtml(o.orderNumber) + '</td>' +
+            '<td data-testid="order-date-' + escapeHtml(o.orderNumber) + '">' + dateLabel + '</td>' +
+            '<td data-testid="order-items-' + escapeHtml(o.orderNumber) + '"><div class="order-items-summary">' + itemsSummary + '</div></td>' +
+            '<td data-testid="order-total-' + escapeHtml(o.orderNumber) + '">' + formatMoney(o.total) + discountNote + '</td>' +
+          '</tr>';
+      }).join("");
+
+      body = '<div class="order-table-wrap"><table class="order-table"><thead><tr>' + headHtml + '</tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+    }
+
+    return "" +
+      renderHeader() +
+      '<main>' +
+        '<h1 class="page-title">Order history</h1>' +
+        '<p class="page-subtitle">Orders placed this session. Click a column to sort.</p>' +
+        body +
+      '</main>';
+  }
+
+  function bindOrderHistory() {}
+
+  root().addEventListener("click", appClickHandler);
+  render();
+})();
+</script>
+</body>
+</html>
